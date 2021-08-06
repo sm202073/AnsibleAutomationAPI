@@ -1,0 +1,24 @@
+---
+- name: Update data group.
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+  
+   - name: Sleep for 120 seconds and continue with play
+     wait_for:
+       timeout: 120
+     delegate_to: localhost
+     
+   - name: Hello
+     shell: echo "My name is {{name}} and I'm a {{title}}."
+     register: hello
+
+   - debug:
+       msg: "{{hello.stdout}}"
+     failed_when: "'failure' in title"
+
+   - copy:
+        content: "{{hello.stdout}}"
+        dest: "artifact/{{JobID}}/out.txt"
